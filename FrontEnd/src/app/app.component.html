@@ -1,0 +1,15 @@
+<div style="padding: 50px;justify-content: center; align-items: center; display: flex; flex-direction: column">
+  <h1>Welcome to the BoatApp!</h1>
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+    <input matInput [(ngModel)]="user.username" placeholder="Name">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Password</mat-label>
+    <input matInput [(ngModel)]="user.password" placeholder="Password" type="password">
+  </mat-form-field>
+  <div style="text-align:center">
+    <button mat-stroked-button color="basic" (click)="register(user)">Register</button>
+    <button mat-stroked-button color="basic" (click)="login(user)">Login</button>
+  </div>
+</div>

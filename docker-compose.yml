@@ -1,0 +1,18 @@
+version: "3.2"
+services:
+
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    ports:
+    - "5432:5432"
+    environment:
+      POSTGRES_USER: boatapp
+      POSTGRES_PASSWORD: Boatapp123
+    restart: always
+    networks:
+    - boatapp
+
+networks:
+  boatapp:
+    driver: bridge
