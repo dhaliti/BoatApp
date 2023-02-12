@@ -1,15 +1,13 @@
-<div style="padding: 50px;justify-content: center; align-items: center; display: flex; flex-direction: column">
-  <h1>Welcome to the BoatApp!</h1>
-  <mat-form-field>
-    <mat-label>Name</mat-label>
-    <input matInput [(ngModel)]="user.username" placeholder="Name">
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Password</mat-label>
-    <input matInput [(ngModel)]="user.password" placeholder="Password" type="password">
-  </mat-form-field>
-  <div style="text-align:center">
-    <button mat-stroked-button color="basic" (click)="register(user)">Register</button>
-    <button mat-stroked-button color="basic" (click)="login(user)">Login</button>
-  </div>
+<div class="toolbar" role="banner">
+<!--  <img-->
+<!--    margin="10px 10px 15px 0px"-->
+<!--    width="400px"-->
+<!--    alt="logo"-->
+<!--    src="../assets/Systancia_Identity_White@4x-8.png"-->
+<!--  />-->
+  <div class="spacer"></div>
+ <button mat-stroked-button>Log Out</button>
+</div>
+<div class="content">
+  <app-dashboard></app-dashboard>
 </div>

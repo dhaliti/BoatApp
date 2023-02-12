@@ -11,11 +11,19 @@ import {FormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatButtonModule} from "@angular/material/button";
 import {MatInputModule} from "@angular/material/input";
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { EditDialogComponent } from './dialog/edit-dialog/edit-dialog.component';
+import { AddDialogComponent } from './dialog/add-dialog/add-dialog.component';
+import { DeleteDialogComponent } from './dialog/delete-dialog/delete-dialog.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
+    DashboardComponent,
+    EditDialogComponent,
+    AddDialogComponent,
+    DeleteDialogComponent,
   ],
   imports: [
     BrowserModule,
