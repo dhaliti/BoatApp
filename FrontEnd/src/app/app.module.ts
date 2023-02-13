@@ -16,6 +16,8 @@ import { EditDialogComponent } from './dialog/edit-dialog/edit-dialog.component'
 import { AddDialogComponent } from './dialog/add-dialog/add-dialog.component';
 import { DeleteDialogComponent } from './dialog/delete-dialog/delete-dialog.component';
 import {MatDialog, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
+import {MatIconModule} from "@angular/material/icon";
+import {MatCardModule} from "@angular/material/card";
 
 
 @NgModule({
@@ -36,7 +38,9 @@ import {MatDialog, MatDialogModule, MatDialogRef} from "@angular/material/dialog
     MatSlideToggleModule,
     BrowserAnimationsModule,
     MatFormFieldModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule,
+    MatCardModule
   ],
   providers: [
     {
@@ -48,6 +52,7 @@ import {MatDialog, MatDialogModule, MatDialogRef} from "@angular/material/dialog
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA,
     NO_ERRORS_SCHEMA,
+    CUSTOM_ELEMENTS_SCHEMA,
   ],
   bootstrap: [AppComponent]
 })

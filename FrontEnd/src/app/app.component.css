@@ -44,8 +44,11 @@ p {
 
 .content {
   margin: 0 auto;
+  align-items: center;
+  display: flex;
+  justify-content: center;
   text-align: center;
-  padding: 100px;
+  /*padding: 100px;*/
 }
 
 .tabs {

@@ -25,9 +25,7 @@ export class AuthService {
     return this.http.post('https://localhost:7114/api/Auth/login', user, {headers: this.httpOptions, observe: 'response'});
   }
 
-  public getBoats(): Observable<string> {
-    return this.http.get('https://localhost:7114/api/Auth', {
-      responseType: 'text',
-    });
+  public getBoats(): Observable<any> {
+    return this.http.get('https://localhost:7114/api/Auth', {headers: this.httpOptions, observe: 'response'});
   }
 }

@@ -26,10 +26,8 @@ public class AuthController : ControllerBase
     [HttpGet, Authorize]
     public ActionResult<string> GetBoats()
     {
-        var user = new User() {Username = "admin"};
-        var boat = new Boat() { name = "Boat 1", description = "Description 1" };
-        user.Boats.Add(boat); 
-        return Ok(user);
+        var user =  new { username = "damir", boats = new [] { new { name = "boat1", description = "description1", image_url = "https://www.shorelineyachtgroup.com/wp/wp-content/uploads/shorelineyachtgroup.com/2022/12/ABSOLUTE-62-FLY-Shoreline-Yacht-Group-2-1.png" }, new { name = "boat2", description = "description2", image_url = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shorelineyachtgroup.com%2F&psig=AOvVaw3MXL0G0IwewY7Z2u1MT1FQ&ust=1676388692591000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCJj_v87okv0CFQAAAAAdAAAAABAJ" } } };
+        return Ok(user);    
     }
 
     [HttpPost("register")]
