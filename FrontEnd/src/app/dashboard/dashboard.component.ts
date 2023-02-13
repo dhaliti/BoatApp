@@ -21,13 +21,14 @@ export class DashboardComponent {
   }
 
   register(user: User) {
-    this.authService.register(user).subscribe();
+    this.authService.register(user).subscribe(result => console.log(result));
   }
 
   login(user: User) {
     console.log(user);
-    this.authService.login(user).subscribe((token: string) => {
-      localStorage.setItem('authToken', token);
+    this.authService.login(user).subscribe(response => {
+      console.log(response.status);
+      localStorage.setItem('boatToken', response.body);
     });
   }
 

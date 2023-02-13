@@ -35,6 +35,7 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<ActionResult<User>> Register(UserDto request)
     {
+        Console.WriteLine(request.ToString());
         CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
         user.Username = request.Username;
@@ -45,15 +46,18 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<string>> Login(UserDto request)
+    public async Task<ActionResult> Login(UserDto request)
     {
+        Console.WriteLine("LOGIN");
         if (user.Username != request.Username)
         {
+            Console.WriteLine("User not found.");
             return BadRequest("User not found.");
         }
 
         if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
         {
+            Console.WriteLine("Wrong password.");
             return BadRequest("Wrong password.");
         }
 
@@ -61,8 +65,8 @@ public class AuthController : ControllerBase
 
         var refreshToken = GenerateRefreshToken();
         SetRefreshToken(refreshToken);
-
-        return Ok(token);
+        Console.WriteLine("token:" + token);
+        return Ok(new {token});
     }
 
     [HttpPost("refresh-token")]

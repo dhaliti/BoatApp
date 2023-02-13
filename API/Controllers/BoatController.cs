@@ -16,16 +16,19 @@ public class BoatController : ControllerBase
 {
     private readonly BoatAppContext _context;
     private readonly IUserService _userService;
+    private readonly IBoatService _boatService;
 
-    public BoatController(BoatAppContext context, IUserService userService)
+    public BoatController(BoatAppContext context, IUserService userService, IBoatService boatService)
     {
         _userService = userService;
         _context = context;
+        _boatService = boatService;
     }
 
     [HttpPost("create"), Authorize]
     public async Task<ActionResult<User>> AddBoat(Boat boat)
     {
+       // return _boatService.AddBoat(boat);
         var user = _context.Users.FirstOrDefault(u => u.Username == _userService.GetMyName());
         if (user == null)
             return NotFound("User not found.");
