@@ -27,7 +27,7 @@ export class BoatService {
   public delete(boat: Boat): Observable<any> {
     return this.http.post<any>(
       'https://localhost:7114/api/Boat/delete',
-      boat
+      boat, {observe: 'response'}
     );
   }
 }

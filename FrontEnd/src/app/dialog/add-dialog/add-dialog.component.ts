@@ -54,6 +54,7 @@ export class AddDialogComponent implements OnInit {
         alert('Error adding boat');
       } else {
         this.dialogRef.close(response);
+        console.log(response);
       }
     });
   }

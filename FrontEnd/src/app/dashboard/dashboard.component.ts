@@ -13,13 +13,15 @@ interface Member {
   username: string;
   boats: Boat[];
 }
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  constructor(public dialog: MatDialog, private authService: AuthService) {}
+  constructor(public dialog: MatDialog, private authService: AuthService) {
+  }
 
   user: User = {
     username: '',
@@ -27,29 +29,33 @@ export class DashboardComponent implements OnInit {
   }
 
   member: Member = {
-username: '',
-boats: [],
+    username: '',
+    boats: [],
   }
 
   register(user: User) {
     this.authService.register(user).subscribe(result => console.log(result));
+    this.user = {
+      password: '',
+      username: '',
+    }
   }
 
   login(user: User) {
     console.log(user);
     this.authService.login(user).subscribe(response => {
-      localStorage.setItem('authToken', response.body.token);
-      this.member.username = response.body.username;
-      this.member.boats = response.body.boats;
-      this.logged = true;
-      this.user = {
-        password: '',
-        username: '',
-      };
-   },
+        localStorage.setItem('authToken', response.body.token);
+        this.member.username = response.body.username;
+        this.member.boats = response.body.boats;
+        this.logged = true;
+        this.user = {
+          password: '',
+          username: '',
+        };
+      },
       error => {
         alert("Wrong username or password");
-    });
+      });
   }
 
   logged: boolean = false;
@@ -58,29 +64,33 @@ boats: [],
     this.authService.getBoats().subscribe(result => console.log(result));
   }
 
-  edit:boolean = false;
+  edit: boolean = false;
 
   editBoat(boat: Boat) {
-    const dialogRef = this.dialog.open(EditDialogComponent, { data: boat});
+    const dialogRef = this.dialog.open(EditDialogComponent, {data: boat});
     dialogRef.afterClosed().subscribe((result) => {
       this.user = result;
     });
   }
 
   deleteBoat(boat: Boat) {
-    const dialogRef = this.dialog.open(DeleteDialogComponent, { data: boat });
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {data: boat});
     dialogRef.afterClosed().subscribe((response) => {
-      this.member.username = response.body.username;
-      this.member.boats = response.body.boats;
+      if(response) {
+        this.member.username = response.body.username;
+        this.member.boats = response.body.boats;
+      }
     });
   }
 
   addBoat() {
-    const dialogRef = this.dialog.open(AddDialogComponent, { disableClose: true });
+    const dialogRef = this.dialog.open(AddDialogComponent, {disableClose: true});
     dialogRef.afterClosed().subscribe((response) => {
-      console.log(response);
-      this.member.username = response.body.username;
-      this.member.boats = response.body.boats;
+      if (response) {
+        console.log(response);
+        this.member.username = response.body.username;
+        this.member.boats = response.body.boats;
+      }
     });
   }
 
@@ -91,15 +101,14 @@ boats: [],
 
   ngOnInit(): void {
     if (localStorage.getItem('authToken') !== null) {
-      this.authService.getBoats().subscribe(response =>
-      {
-        console.log(response);
-        this.member.username = response.body.username;
-        this.member.boats = response.body.boats;
-        this.logged = true;
-      },
+      this.authService.getBoats().subscribe(response => {
+          console.log(response);
+          this.member.username = response.body.username;
+          this.member.boats = response.body.boats;
+          this.logged = true;
+        },
         error => {
-        console.log("Expired token");
+          console.log("Expired token");
         });
     }
   }

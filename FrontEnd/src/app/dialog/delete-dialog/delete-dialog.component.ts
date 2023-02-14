@@ -35,7 +35,7 @@ export class DeleteDialogComponent {
     this.boatService.delete(this.boat).subscribe(response => {
       if (response.status !== 200) {
         alert('Error deleting boat' + response.status);
-        this.dialogRef.close();
+        console.log(response)
       } else {
         this.dialogRef.close(response);
       }

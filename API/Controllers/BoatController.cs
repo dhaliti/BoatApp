@@ -46,29 +46,25 @@ public class BoatController : ControllerBase
         return Ok(userDto);
     }
 
-    [HttpPost("delete")]
+    [HttpPost("delete"), Authorize]
     public async Task<ActionResult<UserDto>> DeleteBoat(BoatDto requestedBoat)
     {
-        Console.WriteLine("A");
         var user = _context.Users.FirstOrDefault(u => u.Username == _userService.GetMyName());
         if (user == null)
             return NotFound("User not found.");
-        Console.WriteLine("B");
         var boats = _context.Boats.Where(b => b.userId == user.UserId).ToList();
-        var itemToRemove = boats.Single(r => r.name == requestedBoat.name);
-        boats.Remove( itemToRemove);
+        var itemToRemove = boats.Find(b => b.name == requestedBoat.name);
+        user.Boats.Remove(itemToRemove);
         _context.SaveChanges();
-        Console.WriteLine("C");
         UserDto userDto = new UserDto()
         {
             username = user.Username,
-            boats = boats
+            boats = _context.Boats.Where(b => b.userId == user.UserId).ToList()
         };
-        Console.WriteLine("D");
         return Ok(userDto);
     }
 
-    [HttpPut("edit")]
+    [HttpPut("edit"), Authorize]
     public async Task<ActionResult<User>> EditBoat(Boat requestedBoat)
     {
         var user = _context.Users.FirstOrDefault(u => u.Username == _userService.GetMyName());
