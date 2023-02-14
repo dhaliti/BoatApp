@@ -16,39 +16,56 @@ public class BoatController : ControllerBase
 {
     private readonly BoatAppContext _context;
     private readonly IUserService _userService;
-    private readonly IBoatService _boatService;
+   // private readonly IBoatService _boatService;
 
-    public BoatController(BoatAppContext context, IUserService userService, IBoatService boatService)
+    public BoatController(BoatAppContext context, IUserService userService)
     {
         _userService = userService;
         _context = context;
-        _boatService = boatService;
+     //   _boatService = boatService;
     }
 
-    [HttpPost("create"), Authorize]
-    public async Task<ActionResult<User>> AddBoat(Boat boat)
+    [HttpPost("add"), Authorize]
+    public async Task<ActionResult<UserDto>> AddBoat(BoatDto newBoat)
     {
-       // return _boatService.AddBoat(boat);
+        // return _boatService.AddBoat(boat);
         var user = _context.Users.FirstOrDefault(u => u.Username == _userService.GetMyName());
         if (user == null)
             return NotFound("User not found.");
+        Boat boat = new Boat();
+        boat.name = newBoat.name;
+        boat.description = newBoat.description;
+        boat.image_url = newBoat.image_url;
         user.Boats.Add(boat);
         _context.SaveChanges();
-        return CreatedAtAction(JsonConvert.SerializeObject(user), user);
+        UserDto userDto = new UserDto()
+        {
+            username = user.Username,
+            boats = _context.Boats.Where(b => b.userId == user.UserId).ToList()
+        };
+        return Ok(userDto);
     }
 
-    [HttpDelete("delete")]
-    public async Task<ActionResult<User>> DeleteBoat(Boat requestedBoat)
+    [HttpPost("delete")]
+    public async Task<ActionResult<UserDto>> DeleteBoat(BoatDto requestedBoat)
     {
+        Console.WriteLine("A");
         var user = _context.Users.FirstOrDefault(u => u.Username == _userService.GetMyName());
         if (user == null)
             return NotFound("User not found.");
-        var boat = user.Boats.FirstOrDefault(e => e.name == requestedBoat.name);
-        if (boat == null)
-            return NotFound("Boat not found.");
-        user.Boats.Remove(boat);
+        Console.WriteLine("B");
+        var boats = _context.Boats.Where(b => b.userId == user.UserId).ToList();
+        var itemToRemove = boats.Single(r => r.name == requestedBoat.name);
+        boats.Remove( itemToRemove);
         _context.SaveChanges();
-        return Ok(user);
+        Console.WriteLine("C");
+        UserDto userDto = new UserDto()
+        {
+            username = user.Username,
+            boats = boats
+        };
+        Console.WriteLine("D");
+        return Ok(userDto);
     }
 
     [HttpPut("edit")]

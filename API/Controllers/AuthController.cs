@@ -13,80 +13,88 @@ namespace API.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
-    public static User user = new User();
     private readonly IConfiguration _configuration;
     private readonly IUserService _userService;
+    private readonly BoatAppContext _context;
 
-    public AuthController(IConfiguration configuration, IUserService userService)
+    public AuthController(IConfiguration configuration, IUserService userService, BoatAppContext context)
     {
         _configuration = configuration;
         _userService = userService;
+        _context = context;
     }
 
     [HttpGet, Authorize]
     public ActionResult<string> GetBoats()
     {
-        var user =  new { username = "damir", boats = new [] { new { name = "boat1", description = "description1", image_url = "https://www.shorelineyachtgroup.com/wp/wp-content/uploads/shorelineyachtgroup.com/2022/12/ABSOLUTE-62-FLY-Shoreline-Yacht-Group-2-1.png" }, new { name = "boat2", description = "description2", image_url = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shorelineyachtgroup.com%2F&psig=AOvVaw3MXL0G0IwewY7Z2u1MT1FQ&ust=1676388692591000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCJj_v87okv0CFQAAAAAdAAAAABAJ" } } };
-        return Ok(user);    
+        var user = _context.Users.FirstOrDefault(u => u.Username == _userService.GetMyName());
+        UserDto userDto = new UserDto()
+        {
+            username = user.Username,
+            boats = _context.Boats.Where(b => b.userId == user.UserId).ToList()
+        };
+        return Ok(userDto);    
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<User>> Register(UserDto request)
+    public async Task<ActionResult> Register(CredentialsDto request)
     {
+        User user = new User();
+        var userExists = _context.Users.Any(u => u.Username == request.Username);
+        if (userExists)
+            return Conflict("User already exists.");
         Console.WriteLine(request.ToString());
         CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
         user.Username = request.Username;
         user.PasswordHash = passwordHash;
         user.PasswordSalt = passwordSalt;
-
-        return Ok(user);
+        _context.Users.Add(user);
+        _context.SaveChanges();
+        return Ok();
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult> Login(UserDto request)
+    public async Task<ActionResult> Login(CredentialsDto request)
     {
-        Console.WriteLine("LOGIN");
-        if (user.Username != request.Username)
+        var userExists = _context.Users.FirstOrDefault(u => u.Username == request.Username);
+        if (userExists != null)
         {
-            Console.WriteLine("User not found.");
-            return BadRequest("User not found.");
+            Console.WriteLine("USER EXISTS");
+            if (!VerifyPasswordHash(request.Password, userExists.PasswordHash, userExists.PasswordSalt))
+            {
+                Console.WriteLine("Wrong password.");
+                return BadRequest("Wrong password.");
+            }
+            string token = CreateToken(userExists);
+            var refreshToken = GenerateRefreshToken();
+            SetRefreshToken(refreshToken, ref userExists);
+            Console.WriteLine("token:" + token);
+            return Ok(new {token, userExists.Username, userExists.Boats});
         }
-
-        if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
-        {
-            Console.WriteLine("Wrong password.");
-            return BadRequest("Wrong password.");
-        }
-
-        string token = CreateToken(user);
-
-        var refreshToken = GenerateRefreshToken();
-        SetRefreshToken(refreshToken);
-        Console.WriteLine("token:" + token);
-        return Ok(new {token});
+        return BadRequest("User not found.");
     }
 
-    [HttpPost("refresh-token")]
-    public async Task<ActionResult<string>> RefreshToken()
-    {
-        var refreshToken = Request.Cookies["refreshToken"];
-
-        if (!user.RefreshToken.Equals(refreshToken))
-        {
-            return Unauthorized("Invalid Refresh Token.");
-        }
-        else if (user.TokenExpires < DateTime.Now)
-        {
-            return Unauthorized("Token expired.");
-        }
-
-        string token = CreateToken(user);
-        var newRefreshToken = GenerateRefreshToken();
-        SetRefreshToken(newRefreshToken);
-
-        return Ok(token);
-    }
+    // [HttpPost("refresh-token")]
+    // public async Task<ActionResult<string>> RefreshToken()
+    // {
+    //     var refreshToken = Request.Cookies["refreshToken"];
+    //
+    //     if (!user.RefreshToken.Equals(refreshToken))
+    //     {
+    //         return Unauthorized("Invalid Refresh Token.");
+    //     }
+    //     else if (user.TokenExpires < DateTime.Now)
+    //     {
+    //         return Unauthorized("Token expired.");
+    //     }
+    //
+    //     string token = CreateToken(user);
+    //     var newRefreshToken = GenerateRefreshToken();
+    //     SetRefreshToken(newRefreshToken);
+    //
+    //     return Ok(token);
+    // }
 
     private RefreshToken GenerateRefreshToken()
     {
@@ -100,7 +108,7 @@ public class AuthController : ControllerBase
         return refreshToken;
     }
 
-    private void SetRefreshToken(RefreshToken newRefreshToken)
+    private void SetRefreshToken(RefreshToken newRefreshToken, ref User userExists)
     {
         var cookieOptions = new CookieOptions
         {
@@ -109,9 +117,10 @@ public class AuthController : ControllerBase
         };
         Response.Cookies.Append("refreshToken", newRefreshToken.Token, cookieOptions);
 
-        user.RefreshToken = newRefreshToken.Token;
-        user.TokenCreated = newRefreshToken.Created;
-        user.TokenExpires = newRefreshToken.Expires;
+        userExists.RefreshToken = newRefreshToken.Token;
+        userExists.TokenCreated = newRefreshToken.Created;
+        userExists.TokenExpires = newRefreshToken.Expires;
+        _context.SaveChanges();
     }
 
     private string CreateToken(User user)

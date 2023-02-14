@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace API.Models;
 
 public class User
@@ -10,6 +12,6 @@ public class User
     public string RefreshToken { get; set; } = string.Empty;
     public DateTime TokenCreated { get; set; }
     public DateTime TokenExpires { get; set; }
-    
-    public List<Boat> Boats { get; set; }
+    [Required]
+    public List<Boat> Boats { get; set; } = new List<Boat>();
 }

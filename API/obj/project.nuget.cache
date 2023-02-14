@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Pq9haEa8Zi2jmiFThPM6dv3XGcdi6nLWHW+PB2Tu5hXN1Z6OwVENAwWn5mxuui54/n5L9bgUx5Tr0S9HH0+2Qg==",
+  "dgSpecHash": "KkmvQwu2F8tCJhwLVf5mFRbu0vnneRj0K/BBPApg5ZVBUiby4or4OsBp/Q+mkz73I5k13HPjVTmDQy0JDAUAIw==",
   "success": true,
   "projectFilePath": "D:\\BoatApp\\API\\API.csproj",
   "expectedPackageFiles": [
@@ -11,7 +11,9 @@
     "C:\\Users\\d.haliti\\.nuget\\packages\\microsoft.aspnetcore.http.abstractions\\2.2.0\\microsoft.aspnetcore.http.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\d.haliti\\.nuget\\packages\\microsoft.aspnetcore.http.extensions\\2.2.0\\microsoft.aspnetcore.http.extensions.2.2.0.nupkg.sha512",
     "C:\\Users\\d.haliti\\.nuget\\packages\\microsoft.aspnetcore.http.features\\2.2.0\\microsoft.aspnetcore.http.features.2.2.0.nupkg.sha512",
-    "C:\\Users\\d.haliti\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
+    "C:\\Users\\d.haliti\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\6.0.14\\microsoft.aspnetcore.jsonpatch.6.0.14.nupkg.sha512",
+    "C:\\Users\\d.haliti\\.nuget\\packages\\microsoft.aspnetcore.mvc.newtonsoftjson\\6.0.14\\microsoft.aspnetcore.mvc.newtonsoftjson.6.0.14.nupkg.sha512",
+    "C:\\Users\\d.haliti\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\d.haliti\\.nuget\\packages\\microsoft.entityframeworkcore\\7.0.2\\microsoft.entityframeworkcore.7.0.2.nupkg.sha512",
     "C:\\Users\\d.haliti\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\7.0.2\\microsoft.entityframeworkcore.abstractions.7.0.2.nupkg.sha512",
     "C:\\Users\\d.haliti\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\7.0.2\\microsoft.entityframeworkcore.analyzers.7.0.2.nupkg.sha512",
@@ -40,7 +42,8 @@
     "C:\\Users\\d.haliti\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
     "C:\\Users\\d.haliti\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
     "C:\\Users\\d.haliti\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
-    "C:\\Users\\d.haliti\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\d.haliti\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
+    "C:\\Users\\d.haliti\\.nuget\\packages\\newtonsoft.json.bson\\1.0.2\\newtonsoft.json.bson.1.0.2.nupkg.sha512",
     "C:\\Users\\d.haliti\\.nuget\\packages\\npgsql\\7.0.1\\npgsql.7.0.1.nupkg.sha512",
     "C:\\Users\\d.haliti\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\7.0.1\\npgsql.entityframeworkcore.postgresql.7.0.1.nupkg.sha512",
     "C:\\Users\\d.haliti\\.nuget\\packages\\scrutor\\3.0.1\\scrutor.3.0.1.nupkg.sha512",

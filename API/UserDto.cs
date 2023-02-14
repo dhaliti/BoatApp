@@ -1,7 +1,7 @@
-namespace API;
+﻿namespace API;
 
 public class UserDto
 {
-    public string Username { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
+    public string username { get; set; } = string.Empty;
+    public List<Boat> boats = new List<Boat>();
 }

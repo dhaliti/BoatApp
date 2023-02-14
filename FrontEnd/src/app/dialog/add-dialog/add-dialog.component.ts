@@ -2,12 +2,16 @@ import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../../services/auth.service";
 import {MatDialogRef} from "@angular/material/dialog";
 import {Boat} from "../../models/boat";
+import {BoatService} from "../../services/boat.service";
 
 @Component({
   selector: 'app-add-dialog',
   template:
   `
-    <div style="padding: 50px;">
+    <div style="padding: 10px;text-align: center; background: darkblue;color: white ">
+    <h2>New Boat</h2>
+    </div>
+    <div style="padding: 30px;">
     <h4>Name</h4>
     <mat-form-field style="width:100%">
     <input [(ngModel)]="boat.name" matInput placeholder="My Fantasctic Boat">
@@ -21,7 +25,7 @@ import {Boat} from "../../models/boat";
     <input [(ngModel)]="boat.image_url" matInput placeholder="Fantastic image URL">
     </mat-form-field>
       <div style="display: flex; justify-content: flex-end; align-content: space-between">
-    <button  mat-raised-button color="primary">Add</button>
+    <button (click)="addBoat()"  mat-raised-button color="primary">Add</button>
     <button (click)="close()" mat-raised-button color="basic">Close</button>
       </div>
     </div>
@@ -35,7 +39,7 @@ export class AddDialogComponent implements OnInit {
     image_url: '',
   }
 
-  constructor(public dialogRef: MatDialogRef<AddDialogComponent>, private authService: AuthService) {}
+  constructor(public dialogRef: MatDialogRef<AddDialogComponent>, private boatService: BoatService) {}
   ngOnInit() {
     this.dialogRef.updateSize('50%', 'auto');
   }
@@ -44,10 +48,14 @@ export class AddDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  // addBoat() {
-  //   this.authService.addBoat(this.boat).subscribe(result => {
-  //     this.dialogRef.close();
-  //   });
-  // }
+  addBoat() : void {
+    this.boatService.add(this.boat).subscribe(response => {
+      if (response.status !== 200) {
+        alert('Error adding boat');
+      } else {
+        this.dialogRef.close(response);
+      }
+    });
+  }
 
 }

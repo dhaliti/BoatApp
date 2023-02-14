@@ -39,11 +39,14 @@ boats: [],
     console.log(user);
     this.authService.login(user).subscribe(response => {
       localStorage.setItem('authToken', response.body.token);
-      this.authService.getBoats().subscribe(response => {
-        this.member = response.body;
-        this.logged = true;
-      });
-     },
+      this.member.username = response.body.username;
+      this.member.boats = response.body.boats;
+      this.logged = true;
+      this.user = {
+        password: '',
+        username: '',
+      };
+   },
       error => {
         alert("Wrong username or password");
     });
@@ -57,11 +60,6 @@ boats: [],
 
   edit:boolean = false;
 
-  editMode()
-  {
-    this.edit = !this.edit;
-  }
-
   editBoat(boat: Boat) {
     const dialogRef = this.dialog.open(EditDialogComponent, { data: boat});
     dialogRef.afterClosed().subscribe((result) => {
@@ -70,16 +68,19 @@ boats: [],
   }
 
   deleteBoat(boat: Boat) {
-    const dialogRef = this.dialog.open(DeleteDialogComponent, { disableClose: true });
-    dialogRef.afterClosed().subscribe((result) => {
-      this.user = result;
+    const dialogRef = this.dialog.open(DeleteDialogComponent, { data: boat });
+    dialogRef.afterClosed().subscribe((response) => {
+      this.member.username = response.body.username;
+      this.member.boats = response.body.boats;
     });
   }
 
   addBoat() {
     const dialogRef = this.dialog.open(AddDialogComponent, { disableClose: true });
-    dialogRef.afterClosed().subscribe((result) => {
-      this.user = result;
+    dialogRef.afterClosed().subscribe((response) => {
+      console.log(response);
+      this.member.username = response.body.username;
+      this.member.boats = response.body.boats;
     });
   }
 
@@ -93,7 +94,8 @@ boats: [],
       this.authService.getBoats().subscribe(response =>
       {
         console.log(response);
-        this.member = response.body;
+        this.member.username = response.body.username;
+        this.member.boats = response.body.boats;
         this.logged = true;
       },
         error => {

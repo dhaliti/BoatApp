@@ -13,7 +13,7 @@ export class BoatService {
   public add(boat: Boat): Observable<any> {
     return this.http.post<any>(
       'https://localhost:7114/api/Boat/add',
-      boat
+      boat, {observe: 'response'}
     );
   }
 
