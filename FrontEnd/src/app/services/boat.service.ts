@@ -18,9 +18,9 @@ export class BoatService {
   }
 
   public edit(boat: Boat): Observable<any> {
-    return this.http.post<any>(
+    return this.http.put<any>(
       'https://localhost:7114/api/Boat/edit',
-      boat
+      boat, {observe: 'response'}
     );
   }
 

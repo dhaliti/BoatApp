@@ -48,7 +48,8 @@ p {
   display: flex;
   justify-content: center;
   text-align: center;
-  /*padding: 100px;*/
+  background-color: lightblue;
+  height: 100%
 }
 
 .tabs {

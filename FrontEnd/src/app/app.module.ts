@@ -7,8 +7,8 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AuthInterceptor} from "./services/auth.interceptor";
-import {FormsModule} from "@angular/forms";
-import {MatFormFieldModule} from "@angular/material/form-field";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from "@angular/material/form-field";
 import {MatButtonModule} from "@angular/material/button";
 import {MatInputModule} from "@angular/material/input";
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -18,6 +18,8 @@ import { DeleteDialogComponent } from './dialog/delete-dialog/delete-dialog.comp
 import {MatDialog, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
 import {MatIconModule} from "@angular/material/icon";
 import {MatCardModule} from "@angular/material/card";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import { DetailsDialogComponent } from './dialog/details-dialog/details-dialog.component';
 
 
 @NgModule({
@@ -27,12 +29,14 @@ import {MatCardModule} from "@angular/material/card";
     EditDialogComponent,
     AddDialogComponent,
     DeleteDialogComponent,
+    DetailsDialogComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     MatInputModule,
+    MatSnackBarModule,
     FormsModule,
     MatDialogModule,
     MatSlideToggleModule,
@@ -40,9 +44,11 @@ import {MatCardModule} from "@angular/material/card";
     MatFormFieldModule,
     MatButtonModule,
     MatIconModule,
-    MatCardModule
+    MatCardModule,
+    ReactiveFormsModule
   ],
   providers: [
+    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

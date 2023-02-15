@@ -55,12 +55,11 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult> Login(CredentialsDto request)
+    public async Task<ActionResult<UserDto>> Login(CredentialsDto request)
     {
         var userExists = _context.Users.FirstOrDefault(u => u.Username == request.Username);
         if (userExists != null)
         {
-            Console.WriteLine("USER EXISTS");
             if (!VerifyPasswordHash(request.Password, userExists.PasswordHash, userExists.PasswordSalt))
             {
                 Console.WriteLine("Wrong password.");
@@ -69,32 +68,18 @@ public class AuthController : ControllerBase
             string token = CreateToken(userExists);
             var refreshToken = GenerateRefreshToken();
             SetRefreshToken(refreshToken, ref userExists);
-            Console.WriteLine("token:" + token);
-            return Ok(new {token, userExists.Username, userExists.Boats});
+            _context.SaveChanges();
+            UserDto user = new UserDto()
+            {
+                username = userExists.Username,
+                boats = _context.Boats.Where(b => b.userId == userExists.UserId).ToList()
+            };
+            return Ok(new {
+                user, token
+            });
         }
         return BadRequest("User not found.");
     }
-
-    // [HttpPost("refresh-token")]
-    // public async Task<ActionResult<string>> RefreshToken()
-    // {
-    //     var refreshToken = Request.Cookies["refreshToken"];
-    //
-    //     if (!user.RefreshToken.Equals(refreshToken))
-    //     {
-    //         return Unauthorized("Invalid Refresh Token.");
-    //     }
-    //     else if (user.TokenExpires < DateTime.Now)
-    //     {
-    //         return Unauthorized("Token expired.");
-    //     }
-    //
-    //     string token = CreateToken(user);
-    //     var newRefreshToken = GenerateRefreshToken();
-    //     SetRefreshToken(newRefreshToken);
-    //
-    //     return Ok(token);
-    // }
 
     private RefreshToken GenerateRefreshToken()
     {
@@ -120,7 +105,6 @@ public class AuthController : ControllerBase
         userExists.RefreshToken = newRefreshToken.Token;
         userExists.TokenCreated = newRefreshToken.Created;
         userExists.TokenExpires = newRefreshToken.Expires;
-        _context.SaveChanges();
     }
 
     private string CreateToken(User user)

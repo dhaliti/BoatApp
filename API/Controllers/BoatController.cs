@@ -16,26 +16,29 @@ public class BoatController : ControllerBase
 {
     private readonly BoatAppContext _context;
     private readonly IUserService _userService;
-   // private readonly IBoatService _boatService;
 
     public BoatController(BoatAppContext context, IUserService userService)
     {
         _userService = userService;
         _context = context;
-     //   _boatService = boatService;
     }
 
     [HttpPost("add"), Authorize]
     public async Task<ActionResult<UserDto>> AddBoat(BoatDto newBoat)
     {
-        // return _boatService.AddBoat(boat);
+        if (newBoat.name.IsNullOrEmpty())
+            return BadRequest("Name is required.");
+        if (newBoat.description.IsNullOrEmpty())
+            newBoat.description = "No description";
         var user = _context.Users.FirstOrDefault(u => u.Username == _userService.GetMyName());
         if (user == null)
             return NotFound("User not found.");
-        Boat boat = new Boat();
-        boat.name = newBoat.name;
-        boat.description = newBoat.description;
-        boat.image_url = newBoat.image_url;
+        Boat boat = new Boat()
+        {
+            name = newBoat.name,
+            description = newBoat.description,
+            image_url = newBoat.image_url
+        };
         user.Boats.Add(boat);
         _context.SaveChanges();
         UserDto userDto = new UserDto()
@@ -70,12 +73,17 @@ public class BoatController : ControllerBase
         var user = _context.Users.FirstOrDefault(u => u.Username == _userService.GetMyName());
         if (user == null)
             return NotFound("User not found.");
-        var boat = user.Boats.FirstOrDefault(e => e.name == requestedBoat.name);
-        if (boat == null)
-            return NotFound("Boat not found.");
-        boat.name = requestedBoat.name;
-        boat.description = requestedBoat.description;
+        var boats = _context.Boats.Where(b => b.userId == user.UserId).ToList();
+        var itemToEdit = boats.Find(b => b.name == requestedBoat.name);
+        itemToEdit.name = requestedBoat.name;
+        itemToEdit.description = requestedBoat.description;
+        itemToEdit.image_url = requestedBoat.image_url;
         _context.SaveChanges();
-        return Ok(user);
+        UserDto userDto = new UserDto()
+        {
+            username = user.Username,
+            boats = _context.Boats.Where(b => b.userId == user.UserId).ToList()
+        };
+        return Ok(userDto);
     }
 }

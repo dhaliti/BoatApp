@@ -3,6 +3,7 @@ import {AuthService} from "../../services/auth.service";
 import {MatDialogRef} from "@angular/material/dialog";
 import {Boat} from "../../models/boat";
 import {BoatService} from "../../services/boat.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-add-dialog',
@@ -39,7 +40,10 @@ export class AddDialogComponent implements OnInit {
     image_url: '',
   }
 
-  constructor(public dialogRef: MatDialogRef<AddDialogComponent>, private boatService: BoatService) {}
+  constructor(
+    public dialogRef: MatDialogRef<AddDialogComponent>,
+    private boatService: BoatService,
+    private _snackBar: MatSnackBar) {}
   ngOnInit() {
     this.dialogRef.updateSize('50%', 'auto');
   }
@@ -48,15 +52,15 @@ export class AddDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  addBoat() : void {
-    this.boatService.add(this.boat).subscribe(response => {
-      if (response.status !== 200) {
-        alert('Error adding boat');
-      } else {
-        this.dialogRef.close(response);
-        console.log(response);
-      }
-    });
+  async addBoat() : Promise<any> {
+    await this.boatService.add(this.boat).subscribe(response => {
+      this.dialogRef.close(response);
+      console.log(response);
+      },
+      error => {
+      console.log(error);
+      this._snackBar.open('Error: ' + error.error, 'ok');
+      })
   }
 
 }

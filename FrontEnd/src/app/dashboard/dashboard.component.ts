@@ -7,6 +7,9 @@ import {EditDialogComponent} from "../dialog/edit-dialog/edit-dialog.component";
 import {DeleteDialogComponent} from "../dialog/delete-dialog/delete-dialog.component";
 import {AddDialogComponent} from "../dialog/add-dialog/add-dialog.component";
 import {AuthInterceptor} from "../services/auth.interceptor";
+import {FormControl, Validators} from "@angular/forms";
+import {DetailsDialogComponent} from "../dialog/details-dialog/details-dialog.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 
 interface Member {
@@ -20,41 +23,43 @@ interface Member {
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  constructor(public dialog: MatDialog, private authService: AuthService) {
+  constructor(
+    public dialog: MatDialog,
+    private authService: AuthService,
+    private _snackBar: MatSnackBar) {
   }
 
-  user: User = {
-    username: '',
-    password: '',
-  }
+  // user: User = {
+  //   username: '',
+  //   password: new FormControl('', [Validators.required, Validators.max(10), Validators.min(3)]),
+  // }
 
   member: Member = {
     username: '',
     boats: [],
   }
 
-  register(user: User) {
-    this.authService.register(user).subscribe(result => console.log(result));
-    this.user = {
-      password: '',
-      username: '',
-    }
+  register() {
+    this.authService.register({username: this.name.value, password: this.pass.value}).subscribe(result => {
+      console.log(result)
+        this.pass.defaultValue;
+        this.name.defaultValue;
+    },
+      error => {
+      this._snackBar.open('Error: ' + error.error, 'ok');
+      });
   }
 
-  login(user: User) {
-    console.log(user);
-    this.authService.login(user).subscribe(response => {
+  login() {
+    this.authService.login({username: this.name.value, password: this.pass.value}).subscribe(response => {
         localStorage.setItem('authToken', response.body.token);
-        this.member.username = response.body.username;
-        this.member.boats = response.body.boats;
+        this.member = response.body;
         this.logged = true;
-        this.user = {
-          password: '',
-          username: '',
-        };
+        this.pass.defaultValue;
+        this.name.defaultValue;
       },
       error => {
-        alert("Wrong username or password");
+        this._snackBar.open('Error: ' + error.error, 'Ok');
       });
   }
 
@@ -64,27 +69,39 @@ export class DashboardComponent implements OnInit {
     this.authService.getBoats().subscribe(result => console.log(result));
   }
 
+  pass = new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(10)]);
+  name = new FormControl('', [Validators.required]);
+
+  getErrorMessage(): string {
+    if (this.pass.hasError('minLength')) {return 'Password is too short'};
+    return 'this field cannot remain empty'
+  }
+
   edit: boolean = false;
 
   editBoat(boat: Boat) {
     const dialogRef = this.dialog.open(EditDialogComponent, {data: boat});
     dialogRef.afterClosed().subscribe((result) => {
-      this.user = result;
+      this.member = result.body;
     });
   }
 
-  deleteBoat(boat: Boat) {
+  deleteBoat(boat: Boat): void {
     const dialogRef = this.dialog.open(DeleteDialogComponent, {data: boat});
     dialogRef.afterClosed().subscribe((response) => {
-      if(response) {
+      if (response) {
         this.member.username = response.body.username;
         this.member.boats = response.body.boats;
       }
     });
   }
 
-  addBoat() {
-    const dialogRef = this.dialog.open(AddDialogComponent, {disableClose: true});
+  openDetails(boat: Boat): void {
+    const dialogRef = this.dialog.open(DetailsDialogComponent, {data: boat});
+  }
+
+  addBoat(): void {
+    const dialogRef = this.dialog.open(AddDialogComponent, {disableClose: false});
     dialogRef.afterClosed().subscribe((response) => {
       if (response) {
         console.log(response);
@@ -103,8 +120,7 @@ export class DashboardComponent implements OnInit {
     if (localStorage.getItem('authToken') !== null) {
       this.authService.getBoats().subscribe(response => {
           console.log(response);
-          this.member.username = response.body.username;
-          this.member.boats = response.body.boats;
+          this.member = response.body;
           this.logged = true;
         },
         error => {

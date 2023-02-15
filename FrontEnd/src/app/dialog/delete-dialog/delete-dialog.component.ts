@@ -4,6 +4,7 @@ import {AuthService} from "../../services/auth.service";
 import {AddDialogComponent} from "../add-dialog/add-dialog.component";
 import {BoatService} from "../../services/boat.service";
 import {Boat} from "../../models/boat";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-delete-dialog',
@@ -19,8 +20,9 @@ import {Boat} from "../../models/boat";
 })
 export class DeleteDialogComponent {
   constructor(
-    public dialogRef: MatDialogRef<AddDialogComponent>,
+    public dialogRef: MatDialogRef<DeleteDialogComponent>,
     private boatService: BoatService,
+    private _snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: Boat) {
     this.boat = data;
   }
@@ -31,14 +33,12 @@ export class DeleteDialogComponent {
 
   boat: Boat;
 
-  delete() {
-    this.boatService.delete(this.boat).subscribe(response => {
-      if (response.status !== 200) {
-        alert('Error deleting boat' + response.status);
-        console.log(response)
-      } else {
-        this.dialogRef.close(response);
-      }
+  async delete() {
+    await this.boatService.delete(this.boat).subscribe(response => {
+      this.dialogRef.close(response)
+    },
+      error => {
+      this._snackBar.open('Error: ' + error.error, 'Ok');
     })
   }
 }

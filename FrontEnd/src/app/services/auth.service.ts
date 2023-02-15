@@ -21,7 +21,6 @@ export class AuthService {
   }
 
   public login(user: User): Observable<any> {
-    console.log(user.username);
     return this.http.post('https://localhost:7114/api/Auth/login', user, {headers: this.httpOptions, observe: 'response'});
   }
 
