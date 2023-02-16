@@ -1,9 +1,8 @@
-<div style="background-color: lightblue">
-<div *ngIf="!logged"
-     style="display: flex; flex-direction: column; padding: 50px;justify-content: center; background-color:lightblue; align-items: center; text-align: center;">
-  <mat-card style="padding: 50px;">
-    <mat-card-content>
-      <h1 style="font-family: Permanent Marker">Welcome to the BoatApp!</h1>
+<div style="background-color: #3d5a80">
+<div *ngIf="!logged" class="control-panel">
+  <mat-card style="padding: 10px 50px;">
+    <mat-card-content style="color:white; display: flex; flex-direction: column">
+      <h1 style="font-family: Permanent Marker; color: #3d5a80">Welcome to the App!</h1>
       <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>
         <input matInput [formControl]="name" placeholder="User Name">
@@ -15,49 +14,50 @@
         <mat-hint align="end">{{input.value.length}}/10</mat-hint>
         <mat-error *ngIf="pass.invalid">{{getErrorMessage()}}</mat-error>
       </mat-form-field>
-      <div *ngIf="!pass.invalid && !name.invalid" style="text-align:center">
+      <div *ngIf="!pass.invalid && !name.invalid" style="text-align:center; display: flex; justify-content: space-between">
         <button mat-flat-button color="primary" (click)="login()">Login</button>
-        <button mat-stroked-button color="basic" (click)="register()">Register</button>
+        <button mat-flat-button color="accent" (click)="register()">Register</button>
       </div>
-      <div *ngIf="pass.invalid || name.invalid" style="text-align:center">
+      <div *ngIf="pass.invalid || name.invalid" style="text-align:center; display: flex; justify-content: space-between">
         <button mat-flat-button disabled>Login</button>
         <button mat-flat-button disabled>Register</button>
       </div>
     </mat-card-content>
   </mat-card>
 </div>
-<div *ngIf="logged"
-     style="display: flex; flex-direction: column; background-color: lightblue; align-items: center;">
-  <mat-card style="padding: 50px;">
+<div *ngIf="logged" class="control-panel">
+  <mat-card class="logged-control">
     <mat-card-content>
-      <h1 style="font-family: Permanent Marker">BoatApp</h1>
-      <h2><i>Welcome back {{member.username}}!</i></h2>
-      <div style="display: flex; flex-direction: row; justify-content: space-between">
+      <h2 style="font-family: Permanent Marker; color: #293241 ">Welcome back {{member.username}}!</h2>
+      <div class="control-buttons">
         <button mat-flat-button color="primary" (click)="addBoat()">Add Boat
           <mat-icon>add_circle</mat-icon>
         </button>
-        <button mat-flat-button color="accent" (click)="edit = true">Edit Boat
+        <button mat-flat-button color="accent" (click)="edit = !edit">Edit Boat
           <mat-icon>edit</mat-icon>
         </button>
-        <button mat-stroked-button color="basic" (click)="logOut()">Logout
+        <button mat-stroked-button style="background-color:white" (click)="logOut()">Logout
           <mat-icon>logout</mat-icon>
         </button>
       </div>
     </mat-card-content>
   </mat-card>
-  <div *ngFor="let boat of member.boats" style="min-width: 400px;">
-  <mat-card style="margin-top: 10px; padding: 10px 50px; " (click)="openDetails(boat)">
-    <mat-card-content>
-      <h4>{{boat.name}}</h4>
-      <p><i>{{boat.description}}</i></p>
-    </mat-card-content>
+  <div *ngFor="let boat of member.boats" class="boats">
+  <mat-card style="margin-top: 10px; padding: 10px 50px; width: 300px; text-align: center" (click)="openDetails(boat)">
+    <mat-card-header>
+      <div mat-card-avatar *ngIf="boat.image_url" style="background-image: url({{boat.image_url}}); background-size: cover"></div>
+      <div mat-card-avatar *ngIf="!boat.image_url" style="background-image: url('../../assets/image_url_default.png'); background-size: cover"></div>
+      <mat-card-title>{{boat.name}}</mat-card-title>
+    </mat-card-header>
   </mat-card>
+    <div style="display: flex; flex-direction: row">
   <button *ngIf="edit" mat-mini-fab color="accent" (click)="editBoat(boat)">
     <mat-icon>edit</mat-icon>
   </button>
   <button *ngIf="edit" mat-mini-fab color="warn" (click)="deleteBoat(boat)">
     <mat-icon>delete</mat-icon>
   </button>
+    </div>
   </div>
 </div>
 </div>

@@ -44,11 +44,11 @@ p {
 
 .content {
   margin: 0 auto;
-  align-items: center;
+  /*align-items: center;*/
   display: flex;
   justify-content: center;
   text-align: center;
-  background-color: lightblue;
+  background-color: #3d5a80;
   height: 100%
 }
 

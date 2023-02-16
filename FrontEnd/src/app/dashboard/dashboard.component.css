@@ -1,0 +1,53 @@
+.control-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 50px 0px;
+  justify-content: center;
+  background-color:#3d5a80;
+  align-items: center;
+  text-align: center;
+}
+
+.logged-control {
+  padding: 10px 50px;
+  background-color: #98c1d9;
+}
+
+.control-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between
+}
+
+.boats {
+  width: 400px;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+
+@media screen and (max-width: 600px) {
+  .logged-control {
+    padding: 10px 50px;
+    background-color: #98c1d9;
+    max-width: 95%;
+  }
+
+  .control-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between
+  }
+
+ .boats {
+   width: 300px;
+   max-width: 95%;
+   display:flex;
+   justify-content: center;
+   align-items: center;
+   flex-direction: column;
+
+ }
+}

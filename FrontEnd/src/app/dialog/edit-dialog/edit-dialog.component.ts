@@ -24,7 +24,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
             <input [(ngModel)]="boat.image_url" matInput placeholder="Fantastic image URL">
         </mat-form-field>
         <div style="display: flex; justify-content: flex-end; align-content: space-between">
-            <button (click)="editBoat()" mat-raised-button color="primary">Edit</button>
+            <button (click)="editBoat()" mat-raised-button color="accent">Edit</button>
             <button (click)="close()" mat-raised-button color="basic">Close</button>
         </div>
     </div>

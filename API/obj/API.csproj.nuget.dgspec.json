@@ -1,26 +1,31 @@
 {
   "format": 1,
   "restore": {
-    "/Users/john/Desktop/BoatApp/API/API.csproj": {}
+    "D:\\BoatApp\\API\\API.csproj": {}
   },
   "projects": {
-    "/Users/john/Desktop/BoatApp/API/API.csproj": {
+    "D:\\BoatApp\\API\\API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/john/Desktop/BoatApp/API/API.csproj",
+        "projectUniqueName": "D:\\BoatApp\\API\\API.csproj",
         "projectName": "API",
-        "projectPath": "/Users/john/Desktop/BoatApp/API/API.csproj",
-        "packagesPath": "/Users/john/.nuget/packages/",
-        "outputPath": "/Users/john/Desktop/BoatApp/API/obj/",
+        "projectPath": "D:\\BoatApp\\API\\API.csproj",
+        "packagesPath": "C:\\Users\\d.haliti\\.nuget\\packages\\",
+        "outputPath": "D:\\BoatApp\\API\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/Users/john/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\d.haliti\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
-          "/usr/local/share/dotnet/library-packs": {},
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -39,6 +44,14 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "FakeItEasy": {
+              "target": "Package",
+              "version": "[7.3.1, )"
+            },
+            "FluentAssertions": {
+              "target": "Package",
+              "version": "[6.10.0, )"
+            },
             "Identity": {
               "target": "Package",
               "version": "[1.0.3, )"
@@ -69,6 +82,10 @@
               "target": "Package",
               "version": "[6.26.1, )"
             },
+            "Mock": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
               "version": "[7.0.1, )"
@@ -84,6 +101,24 @@
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",
               "version": "[6.26.1, )"
+            },
+            "xunit": {
+              "target": "Package",
+              "version": "[2.4.2, )"
+            },
+            "xunit.assert": {
+              "target": "Package",
+              "version": "[2.4.2, )"
+            },
+            "xunit.core": {
+              "target": "Package",
+              "version": "[2.4.2, )"
+            },
+            "xunit.runner.visualstudio": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.4.5, )"
             }
           },
           "imports": [
@@ -105,7 +140,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.404/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
         }
       }
     }

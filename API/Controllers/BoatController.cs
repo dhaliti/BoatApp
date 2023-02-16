@@ -28,8 +28,6 @@ public class BoatController : ControllerBase
     {
         if (newBoat.name.IsNullOrEmpty())
             return BadRequest("Name is required.");
-        if (newBoat.description.IsNullOrEmpty())
-            newBoat.description = "No description";
         var user = _context.Users.FirstOrDefault(u => u.Username == _userService.GetMyName());
         if (user == null)
             return NotFound("User not found.");
@@ -68,17 +66,23 @@ public class BoatController : ControllerBase
     }
 
     [HttpPut("edit"), Authorize]
-    public async Task<ActionResult<User>> EditBoat(Boat requestedBoat)
+    public async Task<ActionResult<User>> EditBoat(BoatDto requestedBoat)
     {
+        Console.WriteLine("A");
         var user = _context.Users.FirstOrDefault(u => u.Username == _userService.GetMyName());
         if (user == null)
             return NotFound("User not found.");
         var boats = _context.Boats.Where(b => b.userId == user.UserId).ToList();
-        var itemToEdit = boats.Find(b => b.name == requestedBoat.name);
+        Console.WriteLine("B");
+        var itemToEdit = boats.FirstOrDefault(b => b.name == requestedBoat.name);
+        if (itemToEdit == null)
+            return NotFound("Boat not found.");
         itemToEdit.name = requestedBoat.name;
         itemToEdit.description = requestedBoat.description;
         itemToEdit.image_url = requestedBoat.image_url;
+        Console.WriteLine("C");
         _context.SaveChanges();
+        Console.WriteLine("D");
         UserDto userDto = new UserDto()
         {
             username = user.Username,

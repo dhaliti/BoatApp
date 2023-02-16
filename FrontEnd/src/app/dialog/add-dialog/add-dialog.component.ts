@@ -9,7 +9,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   selector: 'app-add-dialog',
   template:
   `
-    <div style="padding: 10px;text-align: center; background: darkblue;color: white ">
+    <div class="title">
     <h2>New Boat</h2>
     </div>
     <div style="padding: 30px;">
@@ -31,6 +31,18 @@ import {MatSnackBar} from "@angular/material/snack-bar";
       </div>
     </div>
   `,
+  styles: [
+    `
+      .title {
+        text-align: center;
+        background: #4758b8;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top: 20px;
+      }
+    `]
 })
 export class AddDialogComponent implements OnInit {
 
@@ -45,7 +57,7 @@ export class AddDialogComponent implements OnInit {
     private boatService: BoatService,
     private _snackBar: MatSnackBar) {}
   ngOnInit() {
-    this.dialogRef.updateSize('50%', 'auto');
+    this.dialogRef.updateSize('80%', 'auto');
   }
 
   close() {

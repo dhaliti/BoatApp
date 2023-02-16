@@ -12,7 +12,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
     `
       <div style="padding:20px; text-align: center">
         <h4>Are you sure you want to delete this boat?</h4>
-        <button (click)="delete()" mat-raised-button color="primary">Delete</button>
+        <button (click)="delete()" mat-raised-button color="warn">Delete</button>
         <button (click)="close()" mat-raised-button color="basic">Close</button>
       </div>
     `,

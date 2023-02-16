@@ -29,11 +29,6 @@ export class DashboardComponent implements OnInit {
     private _snackBar: MatSnackBar) {
   }
 
-  // user: User = {
-  //   username: '',
-  //   password: new FormControl('', [Validators.required, Validators.max(10), Validators.min(3)]),
-  // }
-
   member: Member = {
     username: '',
     boats: [],
@@ -42,8 +37,8 @@ export class DashboardComponent implements OnInit {
   register() {
     this.authService.register({username: this.name.value, password: this.pass.value}).subscribe(result => {
       console.log(result)
-        this.pass.defaultValue;
-        this.name.defaultValue;
+        this.pass.setValue('');
+        this.name.setValue('');
     },
       error => {
       this._snackBar.open('Error: ' + error.error, 'ok');
@@ -52,11 +47,11 @@ export class DashboardComponent implements OnInit {
 
   login() {
     this.authService.login({username: this.name.value, password: this.pass.value}).subscribe(response => {
+      console.log(response);
         localStorage.setItem('authToken', response.body.token);
-        this.member = response.body;
+        this.member.username = response.body.user.username;
+        this.member.boats = response.body.user.boats;
         this.logged = true;
-        this.pass.defaultValue;
-        this.name.defaultValue;
       },
       error => {
         this._snackBar.open('Error: ' + error.error, 'Ok');
@@ -73,16 +68,17 @@ export class DashboardComponent implements OnInit {
   name = new FormControl('', [Validators.required]);
 
   getErrorMessage(): string {
-    if (this.pass.hasError('minLength')) {return 'Password is too short'};
-    return 'this field cannot remain empty'
+    if (this.pass.hasError('minLength')) {return ''};
+    return ''
   }
 
   edit: boolean = false;
 
   editBoat(boat: Boat) {
     const dialogRef = this.dialog.open(EditDialogComponent, {data: boat});
-    dialogRef.afterClosed().subscribe((result) => {
-      this.member = result.body;
+    dialogRef.afterClosed().subscribe((response) => {
+      this.member.username = response.body.username;
+      this.member.boats = response.body.boats;
     });
   }
 
@@ -120,7 +116,8 @@ export class DashboardComponent implements OnInit {
     if (localStorage.getItem('authToken') !== null) {
       this.authService.getBoats().subscribe(response => {
           console.log(response);
-          this.member = response.body;
+          this.member.username = response.body.username;
+          this.member.boats = response.body.boats;
           this.logged = true;
         },
         error => {
