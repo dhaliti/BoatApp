@@ -17,7 +17,7 @@ public class AuthController : ControllerBase
     private readonly IUserService _userService;
     private readonly BoatAppContext _context;
 
-    public AuthController(IConfiguration configuration, IUserService userService, BoatAppContext context)
+    public AuthController(IConfiguration configuration, IUserService userService, BoatAppContext? context)
     {
         _configuration = configuration;
         _userService = userService;
@@ -39,6 +39,8 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<ActionResult> Register(CredentialsDto request)
     {
+        if (request.Password.IsNullOrEmpty() || request.Username.IsNullOrEmpty() || request.Password.Length < 3)
+            return BadRequest("Username and password are required.");
         User user = new User();
         var userExists = _context.Users.Any(u => u.Username == request.Username);
         if (userExists)

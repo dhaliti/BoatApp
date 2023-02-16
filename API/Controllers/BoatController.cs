@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using API.Entities;
 using API.Models;
 using API.Services;
 using Newtonsoft.Json;
@@ -17,7 +18,7 @@ public class BoatController : ControllerBase
     private readonly BoatAppContext _context;
     private readonly IUserService _userService;
 
-    public BoatController(BoatAppContext context, IUserService userService)
+    public BoatController(BoatAppContext? context, IUserService userService)
     {
         _userService = userService;
         _context = context;
@@ -68,21 +69,17 @@ public class BoatController : ControllerBase
     [HttpPut("edit"), Authorize]
     public async Task<ActionResult<User>> EditBoat(BoatDto requestedBoat)
     {
-        Console.WriteLine("A");
         var user = _context.Users.FirstOrDefault(u => u.Username == _userService.GetMyName());
         if (user == null)
             return NotFound("User not found.");
         var boats = _context.Boats.Where(b => b.userId == user.UserId).ToList();
-        Console.WriteLine("B");
         var itemToEdit = boats.FirstOrDefault(b => b.name == requestedBoat.name);
         if (itemToEdit == null)
             return NotFound("Boat not found.");
         itemToEdit.name = requestedBoat.name;
         itemToEdit.description = requestedBoat.description;
         itemToEdit.image_url = requestedBoat.image_url;
-        Console.WriteLine("C");
         _context.SaveChanges();
-        Console.WriteLine("D");
         UserDto userDto = new UserDto()
         {
             username = user.Username,
