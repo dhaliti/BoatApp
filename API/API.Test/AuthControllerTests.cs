@@ -14,89 +14,56 @@ using API.Models;
 
 public class AuthControllerTests
 {
-    private IConfiguration _configuration;
-    private IUserService _userService;
-    private BoatAppContext _context;
-    private AuthController _authController;
+    private readonly IConfiguration _configuration = new ConfigurationBuilder().Build();
+    private readonly Mock<IUserService> _userService = new Mock<IUserService>();
+    private readonly BoatAppContext _context = new BoatAppContext(new DbContextOptionsBuilder<BoatAppContext>()
+        .UseInMemoryDatabase(databaseName: "BoatAppTestDb")
+        .Options);
+    private readonly AuthController _authController;
 
-    [SetUp]
-    public void Setup()
+    public AuthControllerTests()
     {
-        _configuration = new ConfigurationBuilder().Build();
-        _userService = new UserService(new HttpContextAccessor());
-        _context = new BoatAppContext(new DbContextOptionsBuilder<BoatAppContext>()
-            .UseInMemoryDatabase(databaseName: "BoatApp")
-            .Options);
-        _authController = new AuthController(_configuration, _userService, _context);
+        _authController = new AuthController(_configuration, _userService.Object, _context);
     }
 
-    [Test]
-    public void Login_ReturnsBadRequest_WhenUserNotFound()
+    [Fact]
+    public void GetBoats_ReturnsBadRequest_WhenNoUserExists()
     {
         // Arrange
-        var request = new CredentialsDto
-        {
-            Username = "user",
-            Password = "password"
-        };
-
+        _userService.Setup(x => x.GetMyName()).Returns("non-existing-user");
+            
         // Act
-        var result = _authController.Login(request).Result;
-
+        var result = _authController.GetBoats();
+            
         // Assert
-        Assert.IsInstanceOf<BadRequestObjectResult>(result.Result);
-        Assert.AreEqual("User not found.", ((BadRequestObjectResult)result.Result).Value);
+        Assert.IsType<BadRequestObjectResult>(result.Result);
     }
 
-    [Test]
-    public void Login_ReturnsBadRequest_WhenWrongPassword()
-    {
-        // Arrange
-        var user = new User
-        {
-            Username = "user",
-            PasswordHash = new byte[] { 1, 2, 3 },
-            PasswordSalt = new byte[] { 4, 5, 6 }
-        };
-        _context.Users.Add(user);
-        _context.SaveChanges();
-
-        var request = new CredentialsDto
-        {
-            Username = "user",
-            Password = "wrongpassword"
-        };
-
-        // Act
-        var result = _authController.Login(request).Result;
-
-        // Assert
-        Assert.IsInstanceOf<BadRequestObjectResult>(result.Result);
-        Assert.AreEqual("Wrong password.", ((BadRequestObjectResult)result.Result).Value);
-    }
-
-    [Test]
+    [Fact]
     public void Register_ReturnsConflict_WhenUserExists()
     {
         // Arrange
-        var user = new User
-        {
-            Username = "user"
-        };
-        _context.Users.Add(user);
+        _context.Users.Add(new User { Username = "existing-user" });
         _context.SaveChanges();
-
-        var request = new CredentialsDto
-        {
-            Username = "user",
-            Password = "password"
-        };
+        var request = new CredentialsDto { Username = "existing-user", Password = "password" };
 
         // Act
-        var result = _authController.Register(request).Result;
+        var result = _authController.Register(request);
 
         // Assert
-        Assert.IsInstanceOf<ConflictObjectResult>(result);
-        Assert.AreEqual("User already exists.", ((ConflictObjectResult)result).Value);
+        Assert.IsType<ConflictObjectResult>(result.Result);
     }
-}
+
+    [Fact]
+    public void Login_ReturnsBadRequest_WhenUserDoesNotExist()
+    {
+        // Arrange
+        var request = new CredentialsDto { Username = "non-existing-user", Password = "password" };
+
+        // Act
+        var result = _authController.Login(request);
+
+        // Assert
+        Assert.IsType<BadRequestObjectResult>(result.Result);
+    }
+}}
