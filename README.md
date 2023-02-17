@@ -6,8 +6,9 @@
 ## Technologies used
 
 <li>Angular</li>
-<li>.NET Core 6</li>
-<li>PostgreSQL</li
+<li>Material UI</li>
+<li>.NET Core</li>
+<li>PostgreSQL</li>
 <li>Docker</li>
 
 ## Features
