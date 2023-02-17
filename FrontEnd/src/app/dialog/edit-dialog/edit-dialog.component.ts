@@ -13,7 +13,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
     <div style="padding: 50px;">
         <h4>Name</h4>
         <mat-form-field style="width:100%">
-            <input [(ngModel)]="boat.name" matInput placeholder="My Fantasctic Boat">
+            <input [(ngModel)]="boat.newName" matInput placeholder="My Fantasctic Boat">
         </mat-form-field>
         <h4>Description</h4>
         <mat-form-field style="width:100%">
@@ -38,12 +38,15 @@ export class EditDialogComponent implements OnInit {
     private _snackBar: MatSnackBar,
   @Inject(MAT_DIALOG_DATA) public data: Boat) {
     this.boat = data;
+    this.boat.newName = data.name;
   }
 
 
   boat: Boat;
 
   editBoat(): void {
+    if (this.boat.newName === this.boat.name)
+      this.boat.newName = '';
     this.boatService.edit(this.boat).subscribe(response => {
         this.dialogRef.close(response);
         console.log(response);

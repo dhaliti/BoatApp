@@ -1,6 +1,17 @@
 version: "3.2"
 services:
 
+  frontend:
+    container_name: frontend
+    depends_on:
+    - api
+    ports:
+    - "4200:4200"
+    build: ./FrontEnd
+    restart: always
+    networks:
+    - boatapp
+
   postgres:
     container_name: boatapp-postgres
     image: postgres:latest
@@ -9,6 +20,17 @@ services:
     environment:
       POSTGRES_USER: boatapp
       POSTGRES_PASSWORD: Boatapp123
+    restart: always
+    networks:
+    - boatapp
+
+  api:
+    container_name: api
+    depends_on: 
+    - postgres
+    ports:
+    - "7114:7114"
+    build: ./API
     restart: always
     networks:
     - boatapp

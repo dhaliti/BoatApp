@@ -39,10 +39,9 @@
 
     <ItemGroup>
       <_ContentIncludedByDefault Remove="Test\packages.config" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="API.Tests" />
+      <_ContentIncludedByDefault Remove="API.Test\obj\API.Test.csproj.nuget.dgspec.json" />
+      <_ContentIncludedByDefault Remove="API.Test\obj\project.assets.json" />
+      <_ContentIncludedByDefault Remove="API.Test\obj\project.packagespec.json" />
     </ItemGroup>
 
 </Project>

@@ -30,6 +30,7 @@ import {Boat} from "../../models/boat";
   styles: [`
     .image_url {
         width: 50%;
+        max-width: 800px;
     }
     .title {
       text-align: center;
@@ -55,7 +56,7 @@ export class DetailsDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dialogRef.updateSize('80%', 'auto');
+    this.dialogRef.updateSize('70%', 'auto');
   }
 
   close() : void {

@@ -34,11 +34,18 @@ export class DashboardComponent implements OnInit {
     boats: [],
   }
 
+  logged: boolean = false;
+
+  pass = new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(10)]);
+  name = new FormControl('', [Validators.required]);
+  edit: boolean = false;
+
   register() {
     this.authService.register({username: this.name.value, password: this.pass.value}).subscribe(result => {
       console.log(result)
         this.pass.setValue('');
         this.name.setValue('');
+        this._snackBar.open('You successfully registred', 'Ok');
     },
       error => {
       this._snackBar.open('Error: ' + error.error, 'ok');
@@ -51,28 +58,20 @@ export class DashboardComponent implements OnInit {
         localStorage.setItem('authToken', response.body.token);
         this.member.username = response.body.user.username;
         this.member.boats = response.body.user.boats;
+        this.pass.setValue('');
+        this.name.setValue('');
         this.logged = true;
+        this._snackBar.open('You successfully logged in', 'Ok');
       },
       error => {
         this._snackBar.open('Error: ' + error.error, 'Ok');
       });
   }
 
-  logged: boolean = false;
-
-  getBoats() {
-    this.authService.getBoats().subscribe(result => console.log(result));
-  }
-
-  pass = new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(10)]);
-  name = new FormControl('', [Validators.required]);
-
   getErrorMessage(): string {
     if (this.pass.hasError('minLength')) {return ''};
     return ''
   }
-
-  edit: boolean = false;
 
   editBoat(boat: Boat) {
     const dialogRef = this.dialog.open(EditDialogComponent, {data: boat});

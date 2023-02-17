@@ -1,0 +1,31 @@
+﻿# Build output
+bin/
+obj/
+
+# .NET Core
+*.dll
+*.pdb
+*.exe
+*.cache
+*.log
+project.lock.json
+artifacts/
+*.user
+
+# Visual Studio Code
+.vscode/
+
+# Visual Studio
+*.suo
+*.user
+*.sln.docstates
+
+# NuGet
+packages/
+*.nupkg
+*.snupkg
+
+# MSTest
+TestResults/
+[Bb]in/
+[Oo]bj/

@@ -1,21 +1,24 @@
-﻿using System.Linq.Expressions;
-using API;
+﻿using API;
 using API.Controllers;
-using API.Models;
 using API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
+/*
+ I didn't have much time left for unit testing and I encountered an issue with the DBContext.
+ Neither FakeItEasy nor Moq seemed to mock it properly. 
+ In my opinion, it might be better for unit-testing purposes to instantiate the DbContext directly in the controller 
+ by using something like 'using (var conn = new NpgsqlConnection(connectionString)) {}
+ */
+
 public class AuthControllerTests
 {
     private readonly Mock<IUserService> _mockUserService;
-    private readonly BoatController _boatController;
     private readonly AuthController _authController;
 
     public AuthControllerTests()
     {
         _mockUserService = new Mock<IUserService>();
-        _boatController = new BoatController(null, _mockUserService.Object);
         _authController = new AuthController(null, _mockUserService.Object, null);
     }
     
@@ -53,7 +56,7 @@ public class AuthControllerTests
     
 
     [Fact]
-    public async Task Register_Returns_BadRequest_When_Password_Is_Too_Short()
+    public void Register_Returns_BadRequest_When_Password_Is_Too_Short()
     {
         // Arrange
         var request = new CredentialsDto() { Username = "john", Password = "pp"};

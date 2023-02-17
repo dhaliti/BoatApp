@@ -32,6 +32,9 @@ public class BoatController : ControllerBase
         var user = _context.Users.FirstOrDefault(u => u.Username == _userService.GetMyName());
         if (user == null)
             return NotFound("User not found.");
+        var boats = _context.Boats.Where(b => b.userId == user.UserId).ToList();
+        if (boats.Any(b => b.name == newBoat.name))
+            return BadRequest("Boat with this name already exists.");
         Boat boat = new Boat()
         {
             name = newBoat.name,
@@ -73,10 +76,12 @@ public class BoatController : ControllerBase
         if (user == null)
             return NotFound("User not found.");
         var boats = _context.Boats.Where(b => b.userId == user.UserId).ToList();
+        if (boats.FirstOrDefault(b=>b.name == requestedBoat.newName) != null)
+            return BadRequest("Boat already exists");
         var itemToEdit = boats.FirstOrDefault(b => b.name == requestedBoat.name);
         if (itemToEdit == null)
             return NotFound("Boat not found.");
-        itemToEdit.name = requestedBoat.name;
+        itemToEdit.name = requestedBoat.newName.IsNullOrEmpty() ? requestedBoat.name : requestedBoat.newName;
         itemToEdit.description = requestedBoat.description;
         itemToEdit.image_url = requestedBoat.image_url;
         _context.SaveChanges();
